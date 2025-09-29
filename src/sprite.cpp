@@ -33,3 +33,7 @@ void Sprite::display(SDL_Renderer *renderer){
         rect =  {x, y - i*5, height, width};
     }
 }
+
+void Sprite::display(){
+    
+}
