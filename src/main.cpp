@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include <SDL2/SDL.h>
 
-#include "textures.h"
+#include "sprite.h"
 
 using namespace std;
 
@@ -30,7 +30,7 @@ int main(int argc, char *argv[]){
         return -2;
     }
 
-    SDL_Texture *texture = loadSprite(renderer, "sprites/redCross.bmp");
+    Sprite sprite = Sprite(renderer, "sprites/redCross.bmp", 100, 100, 50, 50, 45.0);
 
     SDL_Event events;
     bool running = true;
@@ -46,9 +46,7 @@ int main(int argc, char *argv[]){
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer); //Not really clearing, more like filling
 
-        SDL_Rect rect =  {0, 0, 500, 100};
-
-        SDL_RenderCopy(renderer, texture, nullptr, &rect);
+        sprite.display(renderer);
 
         SDL_RenderPresent(renderer);
     }
@@ -59,3 +57,5 @@ int main(int argc, char *argv[]){
 
     return 0;
 }
+
+//g++ src/*.cpp -IZ:\personal\SDL2Library\include -LZ:\personal\SDL2Library\lib -lmingw32 -lSDL2main -lSDL2 -lopengl32 -o main
