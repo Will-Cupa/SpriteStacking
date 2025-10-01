@@ -1,6 +1,8 @@
 #include <iostream>
 #include <stdexcept>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
+#include <GL/gl.h>
 
 #include "sprite.h"
 
@@ -16,21 +18,21 @@ int main(int argc, char *argv[]){
         return init;
     };
 
-    SDL_Window *window = SDL_CreateWindow("Sprite Stacking", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
+    SDL_Window *window = SDL_CreateWindow("Sprite Stacking", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_OPENGL);
 
     if (window == nullptr){
         cerr << "Failed to create window" << endl;
         return -1;
     }
 
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED); 
+     SDL_GLContext Context = SDL_GL_CreateContext(window);
 
-    if (renderer == nullptr){
-        cerr << "Failed to create renderer" << endl;
+    if (Context == nullptr){
+        cerr << "Failed to create Context" << endl;
         return -2;
     }
 
-    Sprite sprite = Sprite(renderer, "sprites/redCross.bmp", 100, 100, 50, 50, 45.0);
+    Sprite sprite = Sprite("sprites/redCross.bmp", 100, 100, 50, 50, 45.0f);
 
     SDL_Event events;
     bool running = true;
@@ -43,15 +45,13 @@ int main(int argc, char *argv[]){
             }
         }
 
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer); //Not really clearing, more like filling
+        glViewport(0, 0, WIDTH, HEIGHT);
+        glClearColor(1.f, 0.f, 1.f, 0.f);
+        glClear(GL_COLOR_BUFFER_BIT);
 
-        sprite.display(renderer);
-
-        SDL_RenderPresent(renderer);
+        SDL_GL_SwapWindow(window);
     }
 
-    SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
 
